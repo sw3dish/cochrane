@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A bare-bones, opinionated static site generator with a focus on performance and accessibility",
   "bin": {
-    "graaff": "./lib/index.js"
+    "graaff": "./dist/index.js"
   },
   "preferGlobal": true,
   "scripts": {

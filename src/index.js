@@ -1,8 +1,4 @@
 #!/usr/bin/env node
-import argv from 'yargs';
+import cli from './cli';
 
-argv
-  .usage('Usage: $0 <command> [options]')
-  .help('h')
-  .alias('h', 'help')
-  .argv;
+cli();
