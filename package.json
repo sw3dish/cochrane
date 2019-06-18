@@ -2,22 +2,34 @@
   "name": "graaff",
   "version": "1.0.0",
   "description": "A bare-bones, opinionated static site generator with a focus on performance and accessibility",
-  "main": "index.js",
   "bin": {
     "graaff": "./lib/index.js"
   },
+  "preferGlobal": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "npx babel src --out-dir=lib --watch --copy-files"
+    "compile": "npx babel src --out-dir=lib --copy-files",
+    "lint": "npx eslint src",
+    "build": "npm run lint; npm run compile",
+    "watch": "npx onchange -i 'src/**/*.js' -- npm run build"
+  },
+  "dependencies": {
+    "yargs": "^13.2.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.3",
+    "onchange": "^6.0.0"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sw3dish/graaff.git"
   },
   "keywords": [
-    "static",
-    "static",
-    "site",
     "static",
     "site",
     "generator"
@@ -27,13 +39,5 @@
   "bugs": {
     "url": "https://github.com/sw3dish/graaff/issues"
   },
-  "homepage": "https://github.com/sw3dish/graaff#readme",
-  "dependencies": {
-    "yargs": "^13.2.4"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.5",
-    "@babel/preset-env": "^7.4.5"
-  }
+  "homepage": "https://github.com/sw3dish/graaff#readme"
 }
