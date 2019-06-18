@@ -1,0 +1,32 @@
+{
+  "name": "graaff",
+  "version": "1.0.0",
+  "description": "A bare-bones, opinionated static site generator with a focus on performance and accessibility",
+  "main": "index.js",
+  "bin": {
+    "graaff": "./index.js"
+  },
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sw3dish/graaff.git"
+  },
+  "keywords": [
+    "static",
+    "static",
+    "site",
+    "static",
+    "site",
+    "generator"
+  ],
+  "author": "Colin Burr",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/sw3dish/graaff/issues"
+  },
+  "homepage": "https://github.com/sw3dish/graaff#readme",
+  "dependencies": {
+    "yargs": "^13.2.4"
+  }
+}
