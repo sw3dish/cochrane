@@ -4,9 +4,11 @@
   "description": "A bare-bones, opinionated static site generator with a focus on performance and accessibility",
   "main": "index.js",
   "bin": {
-    "graaff": "./index.js"
+    "graaff": "./lib/index.js"
   },
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "npx babel src --out-dir=lib --watch --copy-files"
   },
   "repository": {
     "type": "git",
@@ -28,5 +30,10 @@
   "homepage": "https://github.com/sw3dish/graaff#readme",
   "dependencies": {
     "yargs": "^13.2.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5"
   }
 }
