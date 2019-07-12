@@ -8,12 +8,14 @@
   "preferGlobal": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "npx babel src --out-dir=lib --copy-files",
+    "compile": "npx babel src --out-dir=dist --copy-files",
     "lint": "npx eslint src",
     "build": "npm run lint; npm run compile",
     "watch": "npx onchange -i 'src/**/*.js' -- npm run build"
   },
   "dependencies": {
+    "fs-extra": "^8.0.1",
+    "loglevel": "^1.6.3",
     "yargs": "^13.2.4"
   },
   "devDependencies": {
