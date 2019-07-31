@@ -19,6 +19,7 @@ function extractFrontMatter(fileString) {
     'title',
   ];
 
+  // try to get the front matter from the beginning of the file string
   let frontMatter = null;
   try {
     frontMatter = JSON.parse(frontMatterRegex.exec(fileString)[1]);
@@ -29,11 +30,14 @@ function extractFrontMatter(fileString) {
       throw new FrontMatterSyntaxError();
     }
   }
+
+  // make sure the front matter has the required keys
   requiredFrontMatter.forEach((key) => {
     if (!(key in frontMatter)) {
       throw new FrontMatterSyntaxError();
     }
   });
+
   return frontMatter;
 }
 
@@ -43,6 +47,7 @@ function extractFrontMatter(fileString) {
  * @return {Object} The front matter of the page/post
  */
 function extractContents(fileString) {
+  // get everything after the front matter
   const contentsRegex = /---\s[\s\S]*\s---([\s\S]*)/;
   return contentsRegex.exec(fileString)[1];
 }
@@ -73,6 +78,7 @@ function getLayoutHtml(layout) {
  * @param {String} contentDirectoryPath where content is loaded
  */
 async function buildPage(fileName, partials, contentDirectoryPath) {
+  // try to open the file
   let fileString = '';
   try {
     fileString = await fse.readFile(path.join(contentDirectoryPath, fileName), 'utf8');
@@ -81,6 +87,7 @@ async function buildPage(fileName, partials, contentDirectoryPath) {
     return;
   }
 
+  // try to get the front matter
   let frontMatter = {};
   try {
     frontMatter = extractFrontMatter(fileString);
@@ -92,15 +99,25 @@ async function buildPage(fileName, partials, contentDirectoryPath) {
     }
     return;
   }
+
+  // convert the contents of the file to Markdown
   const contentHtml = marked(extractContents(fileString));
+
+  // populate our view object for mustache rendering
   const view = {
     ...frontMatter,
     content: contentHtml,
+    partials,
   };
-  const layoutHtml = await getLayoutHtml(frontMatter.layout);
-  const pageHtml = createPageHtml(layoutHtml, view);
-  let outputFileName = '';
 
+  // get the layout HTML for rendering
+  const layoutHtml = await getLayoutHtml(frontMatter.layout);
+
+  // create the HTML to be written to the file
+  const pageHtml = createPageHtml(layoutHtml, view);
+
+  // determine if we should use the slug for a file name or use the original file name
+  let outputFileName = '';
   if ('slug' in frontMatter) {
     outputFileName = `${frontMatter.slug}.html`;
   } else {
@@ -110,6 +127,7 @@ async function buildPage(fileName, partials, contentDirectoryPath) {
   }
   const pagePath = path.join(process.cwd(), 'site', outputFileName);
 
+  // write the HTML to the file
   await fse.writeFile(pagePath, pageHtml);
   log.info(`${fileName} was created successfully at: ${pagePath}`);
 }
@@ -121,6 +139,7 @@ async function buildPage(fileName, partials, contentDirectoryPath) {
  */
 async function buildDirectory(directoryName, partials) {
   const contentDirectoryPath = path.join(process.cwd(), 'content', directoryName);
+  // loop over all of the files in each content directory and create an HTML file for it
   try {
     const fileNames = await fse.readdir(contentDirectoryPath);
     fileNames.forEach(async (fileName) => {
@@ -148,10 +167,12 @@ async function loadPartial(partialName, partialsPath) {
 
 /**
  * Load all partials for use in layout files
- * @return an Array of partials in string format
+ * @return {Array} an Array of partials in string format
  */
 async function loadPartials() {
   const partialsPath = path.join(process.cwd(), 'partials');
+  // loop over all the partial files and load them into an object where the value
+  // is a string to use in mustache rendering
   const partials = {};
   try {
     const partialNames = await fse.readdir(partialsPath);
