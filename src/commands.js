@@ -36,6 +36,7 @@ function extractFrontMatter(fileString) {
   });
   return frontMatter;
 }
+
 /**
  * Extract the Markdown contents from a page/post file
  * @param {String} fileString The contents of a file
@@ -45,6 +46,7 @@ function extractContents(fileString) {
   const contentsRegex = /---\s[\s\S]*\s---([\s\S]*)/;
   return contentsRegex.exec(fileString)[1];
 }
+
 /**
  * Use mustache.js to create page
  * @param {String} layoutHtml the layout HTML to base the page on
@@ -54,6 +56,7 @@ function extractContents(fileString) {
 function createPageHtml(layoutHtml, view) {
   return Mustache.render(layoutHtml, view);
 }
+
 /**
  * Get the HTMl of the specified layout to base the page on
  * @param {String} layout the layout to get the HTML for
@@ -62,9 +65,12 @@ function createPageHtml(layoutHtml, view) {
 function getLayoutHtml(layout) {
   return fse.readFile(path.join(process.cwd(), 'layouts', `${layout}.mustache`), 'utf8');
 }
+
 /**
  * Build content in the file name that is passed in
  * @param {String} fileName the Markdown file to build HTML from
+ * @param {Array} partials a collection of partials to use in creating the content
+ * @param {String} contentDirectoryPath where content is loaded
  */
 async function buildPage(fileName, partials, contentDirectoryPath) {
   let fileString = '';
@@ -110,7 +116,8 @@ async function buildPage(fileName, partials, contentDirectoryPath) {
 
 /**
  * Build the content in the directory name that is passed in
- * @param {String} directoryName
+ * @param {String} directoryName the directory to build files from
+ * @param {Array} partials a collection of partials to use in creating the content
  */
 async function buildDirectory(directoryName, partials) {
   const contentDirectoryPath = path.join(process.cwd(), 'content', directoryName);
@@ -124,6 +131,11 @@ async function buildDirectory(directoryName, partials) {
   }
 }
 
+/**
+ * Load a single partial from a file
+ * @param {String} partialName the name of the partial to load
+ * @param {String} partialsPath the path of the partials directory
+ */
 async function loadPartial(partialName, partialsPath) {
   let partialString = '';
   try {
@@ -134,6 +146,10 @@ async function loadPartial(partialName, partialsPath) {
   return partialString;
 }
 
+/**
+ * Load all partials for use in layout files
+ * @return an Array of partials in string format
+ */
 async function loadPartials() {
   const partialsPath = path.join(process.cwd(), 'partials');
   const partials = {};
@@ -148,6 +164,9 @@ async function loadPartials() {
   return partials;
 }
 
+/**
+ * The initialize command
+ */
 export async function initialize() {
   try {
     await fse.copy(path.resolve(__dirname, '../boilerplate'), '.');
@@ -157,6 +176,9 @@ export async function initialize() {
   }
 }
 
+/**
+ * The build command
+ */
 export async function build() {
   const contentDirectories = ['pages', 'posts'];
   const partials = await loadPartials();

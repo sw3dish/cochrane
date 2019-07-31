@@ -85,6 +85,8 @@ function getLayoutHtml(layout) {
 /**
  * Build content in the file name that is passed in
  * @param {String} fileName the Markdown file to build HTML from
+ * @param {Array} partials a collection of partials to use in creating the content
+ * @param {String} contentDirectoryPath where content is loaded
  */
 
 
@@ -134,7 +136,8 @@ async function buildPage(fileName, partials, contentDirectoryPath) {
 }
 /**
  * Build the content in the directory name that is passed in
- * @param {String} directoryName
+ * @param {String} directoryName the directory to build files from
+ * @param {Array} partials a collection of partials to use in creating the content
  */
 
 
@@ -150,6 +153,12 @@ async function buildDirectory(directoryName, partials) {
     log.error(error);
   }
 }
+/**
+ * Load a single partial from a file
+ * @param {String} partialName the name of the partial to load
+ * @param {String} partialsPath the path of the partials directory
+ */
+
 
 async function loadPartial(partialName, partialsPath) {
   let partialString = '';
@@ -162,6 +171,11 @@ async function loadPartial(partialName, partialsPath) {
 
   return partialString;
 }
+/**
+ * Load all partials for use in layout files
+ * @return an Array of partials in string format
+ */
+
 
 async function loadPartials() {
   const partialsPath = path.join(process.cwd(), 'partials');
@@ -178,6 +192,10 @@ async function loadPartials() {
 
   return partials;
 }
+/**
+ * The initialize command
+ */
+
 
 async function initialize() {
   try {
@@ -187,6 +205,10 @@ async function initialize() {
     log.error(error);
   }
 }
+/**
+ * The build command
+ */
+
 
 async function build() {
   const contentDirectories = ['pages', 'posts'];
