@@ -14,6 +14,7 @@
     "watch": "npx onchange -i 'src/**/*.js' -- npm run build"
   },
   "dependencies": {
+    "chalk": "^2.4.2",
     "fs-extra": "^8.0.1",
     "loglevel": "^1.6.3",
     "yargs": "^13.2.4"
