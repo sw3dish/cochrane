@@ -11,7 +11,7 @@ var _chalk = _interopRequireDefault(require("chalk"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const prefix = '{gray [graaff]}';
+const prefix = _chalk.default`{cyan [graaff]:}`;
 
 function info(message) {
   // eslint-disable-next-line no-console

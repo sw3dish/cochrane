@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-const prefix = '{gray [graaff]}';
+const prefix = chalk`{cyan [graaff]:}`;
 
 export function info(message) {
   // eslint-disable-next-line no-console
