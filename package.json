@@ -16,6 +16,7 @@
   "dependencies": {
     "chalk": "^2.4.2",
     "fs-extra": "^8.0.1",
+    "html-minifier": "^4.0.0",
     "marked": "^0.7.0",
     "mustache": "^3.0.1",
     "yargs": "^13.2.4"
