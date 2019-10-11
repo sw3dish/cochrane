@@ -4,7 +4,16 @@ import * as commands from './commands';
 yargs
   .command(
     ['init', 'initialize', 'i'],
-    'Create a new site in the current directory',
+    'Create a new site',
+    () => {
+      return yargs
+        .option('p', {
+          alias: 'path',
+          default: `${process.cwd()}`,
+          describe: 'the directory to create the site in',
+          type: 'string',
+        });
+    },
     (argv) => {
       commands.initialize(argv);
     },

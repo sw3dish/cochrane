@@ -6,7 +6,14 @@ var commands = _interopRequireWildcard(require("./commands"));
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
-yargs.command(['init', 'initialize', 'i'], 'Create a new site in the current directory', argv => {
+yargs.command(['init', 'initialize', 'i'], 'Create a new site', () => {
+  return yargs.option('p', {
+    alias: 'path',
+    default: `${process.cwd()}`,
+    describe: 'the directory to create the site in',
+    type: 'string'
+  });
+}, argv => {
   commands.initialize(argv);
 }).command(['$0', 'build', 'b'], 'Build the site', argv => {
   commands.build(argv);

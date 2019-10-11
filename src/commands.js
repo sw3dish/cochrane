@@ -2,6 +2,7 @@ import * as fse from 'fs-extra';
 import * as path from 'path';
 import marked from 'marked';
 import * as Mustache from 'mustache';
+import { minify } from 'html-minifier';
 
 import { FrontMatterExistsError, FrontMatterSyntaxError } from './errors';
 import * as log from './logger';
@@ -129,12 +130,22 @@ async function buildPage(fileName, partials, contentDirectoryPath) {
   // create the HTML to be written to the file
   const pageHtml = createPageHtml(layoutHtml, view);
 
+  const minifyOptions = {
+    removeComments: true,
+    removeEmptyAttributes: true,
+    html5: true,
+    collapseWhitespace: true,
+    minifyCSS: true,
+  };
+
+  const minifiedHtml = minify(pageHtml, minifyOptions);
+
   const outputFileName = buildOutputFileName(frontMatter, fileName);
 
   const pagePath = path.join(process.cwd(), 'site', outputFileName);
 
   // write the HTML to the file
-  await fse.writeFile(pagePath, pageHtml);
+  await fse.writeFile(pagePath, minifiedHtml);
   log.info(`${fileName} was created successfully at: ${pagePath}`);
 }
 
@@ -194,9 +205,9 @@ async function loadPartials() {
 /**
  * The initialize command
  */
-export async function initialize() {
+export async function initialize(argv) {
   try {
-    await fse.copy(path.resolve(__dirname, '../boilerplate'), '.', {
+    await fse.copy(path.resolve(__dirname, '../boilerplate'), argv.path, {
       filter: src => !src.includes('.gitkeep'),
     });
     log.info('Graaff has generated the skeleton of a site for you.');

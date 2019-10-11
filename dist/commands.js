@@ -14,6 +14,8 @@ var _marked = _interopRequireDefault(require("marked"));
 
 var Mustache = _interopRequireWildcard(require("mustache"));
 
+var _htmlMinifier = require("html-minifier");
+
 var _errors = require("./errors");
 
 var log = _interopRequireWildcard(require("./logger"));
@@ -144,10 +146,19 @@ async function buildPage(fileName, partials, contentDirectoryPath) {
 
   const layoutHtml = await getLayoutHtml(frontMatter.layout); // create the HTML to be written to the file
 
+  const pageHtml = createPageHtml(layoutHtml, view);
+  const minifyOptions = {
+    removeComments: true,
+    removeEmptyAttributes: true,
+    html5: true,
+    collapseWhitespace: true,
+    minifyCSS: true
+  };
+  const minifiedHtml = (0, _htmlMinifier.minify)(pageHtml, minifyOptions);
   const outputFileName = buildOutputFileName(frontMatter, fileName);
   const pagePath = path.join(process.cwd(), 'site', outputFileName); // write the HTML to the file
 
-  await fse.writeFile(pagePath, pageHtml);
+  await fse.writeFile(pagePath, minifiedHtml);
   log.info(`${fileName} was created successfully at: ${pagePath}`);
 }
 /**
@@ -215,9 +226,9 @@ async function loadPartials() {
  */
 
 
-async function initialize() {
+async function initialize(argv) {
   try {
-    await fse.copy(path.resolve(__dirname, '../boilerplate'), '.', {
+    await fse.copy(path.resolve(__dirname, '../boilerplate'), argv.path, {
       filter: src => !src.includes('.gitkeep')
     });
     log.info('Graaff has generated the skeleton of a site for you.');
