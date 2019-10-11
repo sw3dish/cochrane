@@ -85,6 +85,21 @@ function createPageHtml(layoutHtml, view) {
 function getLayoutHtml(layout) {
   return fse.readFile(path.join(process.cwd(), 'layouts', `${layout}.mustache`), 'utf8');
 }
+
+function buildOutputFileName(frontMatter, fileName) {
+  // determine if we should use the slug for a file name or use the original file name
+  let outputFileName = '';
+
+  if ('slug' in frontMatter) {
+    outputFileName = `${frontMatter.slug}.html`;
+  } else {
+    const fileNameParts = fileName.split('.');
+    fileNameParts.pop();
+    outputFileName = `${fileNameParts.join('-')}.html`;
+  }
+
+  return outputFileName;
+}
 /**
  * Build content in the file name that is passed in
  * @param {String} fileName the Markdown file to build HTML from
@@ -129,18 +144,7 @@ async function buildPage(fileName, partials, contentDirectoryPath) {
 
   const layoutHtml = await getLayoutHtml(frontMatter.layout); // create the HTML to be written to the file
 
-  const pageHtml = createPageHtml(layoutHtml, view); // determine if we should use the slug for a file name or use the original file name
-
-  let outputFileName = '';
-
-  if ('slug' in frontMatter) {
-    outputFileName = `${frontMatter.slug}.html`;
-  } else {
-    const fileNameParts = fileName.split('.');
-    fileNameParts.pop();
-    outputFileName = `${fileNameParts.join('-')}.html`;
-  }
-
+  const outputFileName = buildOutputFileName(frontMatter, fileName);
   const pagePath = path.join(process.cwd(), 'site', outputFileName); // write the HTML to the file
 
   await fse.writeFile(pagePath, pageHtml);
