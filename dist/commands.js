@@ -217,7 +217,9 @@ async function loadPartials() {
 
 async function initialize() {
   try {
-    await fse.copy(path.resolve(__dirname, '../boilerplate'), '.');
+    await fse.copy(path.resolve(__dirname, '../boilerplate'), '.', {
+      filter: src => !src.includes('.gitkeep')
+    });
     log.info('Graaff has generated the skeleton of a site for you.');
   } catch (error) {
     log.error(error);
