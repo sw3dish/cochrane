@@ -13,7 +13,7 @@ import * as log from './logger';
  * @return {Object} The front matter of the page/post
  */
 function extractFrontMatter(fileString) {
-  const frontMatterRegex = /---\s([\s\S]*)\s---/;
+  const frontMatterRegex = /---\s([\s\S]*?)\s---/;
   const requiredFrontMatter = [
     'layout',
     'title',
@@ -48,7 +48,7 @@ function extractFrontMatter(fileString) {
  */
 function extractContents(fileString) {
   // get everything after the front matter
-  const contentsRegex = /---\s[\s\S]*\s---([\s\S]*)/;
+  const contentsRegex = /---\s[\s\S]*?\s---([\s\S]*)/;
   return contentsRegex.exec(fileString)[1];
 }
 
