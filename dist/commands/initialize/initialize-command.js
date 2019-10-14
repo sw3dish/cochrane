@@ -5,23 +5,28 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.handler = exports.builder = exports.describe = exports.command = void 0;
 
-var _build = _interopRequireDefault(require("./build"));
+var _initialize = _interopRequireDefault(require("./initialize"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const command = ['$0', 'build', 'b'];
+const command = ['init [path]', 'initialize', 'i'];
 exports.command = command;
-const describe = 'Build the contents of content directory into site';
+const describe = 'Create a new site';
 exports.describe = describe;
 
 const builder = yargs => {
-  return yargs;
+  return yargs.positional('path', {
+    alias: 'path',
+    default: `${process.cwd()}`,
+    describe: 'The directory to create the site in',
+    type: 'string'
+  });
 };
 
 exports.builder = builder;
 
 const handler = argv => {
-  (0, _build.default)(argv);
+  (0, _initialize.default)(argv);
 };
 
 exports.handler = handler;
