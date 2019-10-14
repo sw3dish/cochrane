@@ -88,8 +88,8 @@ async function getLayoutHtml(layout) {
 }
 /**
  * Determine what the output file name should be based on front matter
- * @param {*} frontMatter the front matter
- * @param {*} fileName
+ * @param {*} frontMatter the front matter of the post
+ * @param {*} fileName the name of the post's md file
  */
 
 
@@ -151,7 +151,7 @@ async function buildPage(fileName, partials, contentDirectoryPath) {
     partials
   }; // get the layout HTML for rendering
 
-  const layoutHtml = getLayoutHtml(frontMatter.layout); // create the HTML to be written to the file
+  const layoutHtml = await getLayoutHtml(frontMatter.layout); // create the HTML to be written to the file
 
   const pageHtml = createPageHtml(layoutHtml, view);
   const minifyOptions = {
@@ -235,7 +235,7 @@ async function loadPartials() {
 
 async function build() {
   const contentDirectories = ['pages', 'posts'];
-  const partials = loadPartials();
+  const partials = await loadPartials();
   contentDirectories.forEach(async directoryName => {
     try {
       await buildDirectory(directoryName, partials);
