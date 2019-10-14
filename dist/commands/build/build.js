@@ -83,9 +83,15 @@ function createPageHtml(layoutHtml, view) {
  */
 
 
-function getLayoutHtml(layout) {
+async function getLayoutHtml(layout) {
   return fse.readFile(path.join(process.cwd(), 'layouts', `${layout}.mustache`), 'utf8');
 }
+/**
+ * Determine what the output file name should be based on front matter
+ * @param {*} frontMatter the front matter
+ * @param {*} fileName
+ */
+
 
 function buildOutputFileName(frontMatter, fileName) {
   // determine if we should use the slug for a file name or use the original file name
@@ -136,14 +142,16 @@ async function buildPage(fileName, partials, contentDirectoryPath) {
   } // convert the contents of the file to Markdown
 
 
-  const contentHtml = (0, _marked.default)(extractContents(fileString)); // populate our view object for mustache rendering
+  const contentHtml = (0, _marked.default)(extractContents(fileString), {
+    gfm: true
+  }); // populate our view object for mustache rendering
 
   const view = { ...frontMatter,
     content: contentHtml,
     partials
   }; // get the layout HTML for rendering
 
-  const layoutHtml = await getLayoutHtml(frontMatter.layout); // create the HTML to be written to the file
+  const layoutHtml = getLayoutHtml(frontMatter.layout); // create the HTML to be written to the file
 
   const pageHtml = createPageHtml(layoutHtml, view);
   const minifyOptions = {
@@ -227,7 +235,7 @@ async function loadPartials() {
 
 async function build() {
   const contentDirectories = ['pages', 'posts'];
-  const partials = await loadPartials();
+  const partials = loadPartials();
   contentDirectories.forEach(async directoryName => {
     try {
       await buildDirectory(directoryName, partials);
